@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
+import React from "react";
 
 const DrawCanvas = () => {
 	const canvasRef = useRef(null);
@@ -12,8 +13,17 @@ const DrawCanvas = () => {
 		ctx.strokeStyle = "#000000";
 	}, []);
 
+	const getCanvasCoordinates = nativeEvent => {
+		const canvas = canvasRef.current;
+		const rect = canvas.getBoundingClientRect();
+		return {
+			offsetX: nativeEvent.clientX - rect.left,
+			offsetY: nativeEvent.clientY - rect.top,
+		};
+	};
+
 	const startDrawing = ({ nativeEvent }) => {
-		const { offsetX, offsetY } = nativeEvent;
+		const { offsetX, offsetY } = getCanvasCoordinates(nativeEvent);
 		const ctx = canvasRef.current.getContext("2d");
 		ctx.beginPath();
 		ctx.moveTo(offsetX, offsetY);
@@ -22,7 +32,7 @@ const DrawCanvas = () => {
 
 	const draw = ({ nativeEvent }) => {
 		if (!drawing) return;
-		const { offsetX, offsetY } = nativeEvent;
+		const { offsetX, offsetY } = getCanvasCoordinates(nativeEvent);
 		const ctx = canvasRef.current.getContext("2d");
 		ctx.lineTo(offsetX, offsetY);
 		ctx.stroke();
@@ -39,13 +49,11 @@ const DrawCanvas = () => {
 	};
 
 	return (
-		<div className="container">
-			<div className="row justify-content-center align-items-start mt-4">
+		<div className="container mt-4">
+			<div className="row">
 				<div className="col-12 col-md-8 mb-3">
 					<canvas
 						ref={canvasRef}
-						width={660}
-						height={400}
 						onMouseDown={startDrawing}
 						onMouseMove={draw}
 						onMouseUp={endDrawing}
@@ -53,11 +61,14 @@ const DrawCanvas = () => {
 						style={{
 							border: "2px solid #ccc",
 							cursor: "crosshair",
-							width: "100%",
+							width: "660px",
+							height: "400px",
 						}}
+						width={660}
+						height={400}
 					/>
 				</div>
-				<div className="col-12 col-md-4 mb-3 d-flex justify-content-md-start justify-content-center">
+				<div className="col-12 col-md-4 d-flex justify-content-md-start justify-content-center">
 					<button
 						className="btn btn-outline-secondary"
 						style={{
