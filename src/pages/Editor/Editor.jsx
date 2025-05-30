@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-
+import DrawCanvas from "../../components/FreeDraw";
 import styles from "./style.module.scss";
-
 import MetaComponent from "../../seo/MetaComponent";
 import metaData from "../../seo/metaData";
-
 import EditContextProvider from "./containers/editContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Settings from "./sections/Settings/Settings.jsx";
 import Output from "./sections/OutputComponent/Output";
-
 import ScrollToTop from "../../components/ScrollToTopButton/ScrollToTopButton";
 import { Button, Input, Label } from "reactstrap";
 
@@ -35,6 +32,17 @@ function Editor() {
 			<div className={styles.dscCommunity}>
 				<EditContextProvider>
 					<Settings />
+
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							margin: "2rem 0",
+						}}
+					>
+						<DrawCanvas />
+					</div>
+
 					<div className={styles.pageBtnsWrapper}>
 						<Button
 							outline
@@ -64,14 +72,17 @@ function Editor() {
 							Next Page
 						</Button>
 					</div>
+
 					{[...Array(pageCount)].map((e, i) => (
 						<Output key={i + 1} pageNo={i + 1} show={i + 1 === currentPageNo} />
 					))}
 				</EditContextProvider>
 			</div>
+
 			<div className={styles.btnWrapper}>
 				<ScrollToTop />
 			</div>
+
 			<div className={styles.pageBtnsWrapper}>
 				<Button
 					outline
@@ -92,4 +103,5 @@ function Editor() {
 		</>
 	);
 }
+
 export default Editor;
